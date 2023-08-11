@@ -6,18 +6,20 @@ from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
 app.config.from_object(Config)
-app.config['JWT_SECRET_KEY'] = 'super-secret-key'
+app.config['SQLALCHEMY_DATABASE_URI'] = Config.SQLALCHEMY_DATABASE_URI
 
+app.config['JWT_SECRET_KEY'] = 'super-secret-key'
 db = SQLAlchemy(app)
+
 migrate = Migrate(app, db)
 jwt = JWTManager(app)
 
 
 def register_blueprint(app):
     from src.routes.general import general_blueprint
-    from src.routes.users import users_blueprint
+    from src.routes.users import user
     app.register_blueprint(general_blueprint)
-    app.register_blueprint(users_blueprint)
+    app.register_blueprint(user)
 
 
 register_blueprint(app)
