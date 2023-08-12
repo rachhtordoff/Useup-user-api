@@ -22,7 +22,16 @@ def login():
     user = User.query.filter_by(email=data['email']).first()
     if user and user.check_password(data['password']):
         token = create_access_token(identity=user.email)
-        return jsonify(access_token=token), 200
+        print(jsonify(access_token=token, 
+            user_id=user.id, 
+            name=user.fullname, 
+            email=user.email))
+        return jsonify(
+            access_token=token, 
+            user_id=user.id, 
+            name=user.fullname, 
+            email=user.email
+        ), 200
     return jsonify({"message": "Invalid credentials"}), 401
 
 @user.route('/protected', methods=['GET'])
