@@ -21,16 +21,18 @@ def signup():
 @jwt_required(refresh=True)
 def refresh():
     current_user = get_jwt_identity()
-    access_token = create_access_token(identity=current_user, expires_delta=timedelta(days=1))
+    access_token = create_access_token(identity=current_user, expires_delta=timedelta(days=30))
     return jsonify(access_token=access_token), 200
 
 @user.route('/login', methods=['POST'])
 def login():
     data = request.json
+    print(data)
     user = User.query.filter_by(email=data['email']).first()
     if user and user.check_password(data['password']):
-        token = create_access_token(identity=user.email, expires_delta=timedelta(days=1))
-        refresh_token = create_refresh_token(identity=user.email)
+        print('yep')
+        token = create_access_token(identity=user.email, expires_delta=timedelta(days=30))
+        refresh_token = create_refresh_token(identity=user.email, expires_delta=timedelta(days=365))
 
         return jsonify(
             access_token=token,
